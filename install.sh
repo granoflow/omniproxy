@@ -10,6 +10,8 @@ BIN_DIR=${OMNIPROXY_BIN_DIR:-"$HOME/.local/bin"}
 die() { printf '%s\n' "$*" >&2; exit 1; }
 
 [ "$(uname -s)" = Darwin ] && [ "$(uname -m)" = arm64 ] || die 'This preview requires an Apple Silicon Mac.'
+os_major=$(sw_vers -productVersion | cut -d . -f 1)
+[ "$os_major" -ge 14 ] || die 'This preview requires macOS 14 or later.'
 case "$INSTALL_DIR:$BIN_DIR" in /*:/*) ;; *) die 'Installation paths must be absolute.' ;; esac
 case "$INSTALL_DIR" in /|/usr|/usr/local|"$HOME"|"$BIN_DIR") die 'Choose a dedicated CLI installation directory.' ;; esac
 accepted=false
@@ -61,6 +63,7 @@ for binary in "$candidate/omniproxy" "$candidate/runtime/facedetect-cli" "$candi
   codesign --verify --strict "$binary"
   codesign -dv --verbose=2 "$binary" 2>&1 | grep -q '^TeamIdentifier=LC7B9U9W53$' || die 'Unexpected publisher signature.'
 done
+spctl --assess --type install "$candidate/omniproxy" || die 'macOS could not verify notarization; installation stopped.'
 "$candidate/omniproxy" --version | grep -q '^Distribution: standalone_cli$' || die 'Unexpected CLI distribution.'
 printf '%s\n' 'granoflow/omniproxy' > "$candidate/.omniproxy-installer"
 [ ! -e "$INSTALL_DIR" ] || mv "$INSTALL_DIR" "$backup"
