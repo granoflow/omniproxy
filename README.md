@@ -4,7 +4,7 @@ Personal AI gateway — closed-source CLI preview from Granoflow.
 
 This repository hosts user documentation, installation scripts and binary releases. The OmniProxy implementation source is not published here.
 
-- [Download the preview](https://github.com/granoflow/omniproxy/releases/tag/v0.1.0-preview.1)
+- [Download the latest preview](https://github.com/granoflow/omniproxy/releases/tag/v0.1.0-preview.2)
 - [安装与 Chrome 工具连接指南](docs/chrome-connection.zh-CN.md)
 - [End User License Agreement / 最终用户许可协议](EULA.zh-CN.md)
 
@@ -18,7 +18,9 @@ Read the EULA before downloading, installing or using the software. The installe
 
 ## Install
 
-The first preview is for Apple Silicon Macs only. It does not include Linux, Windows or Intel Mac binaries.
+Preview 2 provides Apple Silicon macOS and Linux x86_64 GNU archives. See the [installation guide](docs/chrome-connection.zh-CN.md) for Linux. Windows and Intel Mac binaries are not provided.
+
+The following macOS installer is pinned to **preview 1**; preview 2 does not include an installer script. Preview 1 remains compatible with the current extension’s Chrome AI connection.
 
 ```sh
 curl -fL --proto '=https' --tlsv1.2 https://github.com/granoflow/omniproxy/releases/download/v0.1.0-preview.1/install.sh -o /tmp/omniproxy-install.sh
@@ -45,7 +47,7 @@ omniproxy config set chrome.bridge.enabled true
 omniproxy service start
 ```
 
-Use `omniproxy service status` to check the current-user background service. In AI Power Translator settings, find **Chrome built-in AI → Local tool connections**, enable OmniProxy and test the connection. Default address: `127.0.0.1:56787`. The extension initiates the local connection. When its built-in model is available, OmniProxy exposes `chrome-nano` to its authenticated model gateway.
+Use `omniproxy service status` to check the current-user background service. In AI Power Translator settings, find **General settings → Share Chrome built-in AI**, enable OmniProxy and confirm the port. The connection starts automatically. Default address: `127.0.0.1:56787`. The extension initiates the local connection. When its built-in model is available, OmniProxy exposes `chrome-nano` to its authenticated model gateway.
 
 Configuration changes in this preview take effect on the next service startup. Run `omniproxy service stop` before changing settings, then `omniproxy service start` to apply them. To disable access:
 
@@ -54,7 +56,7 @@ omniproxy service stop
 omniproxy config set chrome.bridge.enabled false
 ```
 
-Do not run the desktop app and standalone CLI simultaneously against the same gateway/state. This preview's deterministic protocol tests do not establish availability of Chrome's native model on every machine. See the guide for verification and troubleshooting.
+Do not run the desktop app and standalone CLI simultaneously against the same gateway/state. Public preview compatibility was tested with Chrome 154 and AI Power Translator 1.0.8 on October 7, 2026. Model availability still depends on the local Chrome installation. Published previews do not support remote model discovery for hiding provider advertisements. See the guide for verification and troubleshooting.
 
 ## Uninstall
 
